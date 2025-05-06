@@ -21,8 +21,6 @@ const PoemDisplay = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // In a real app, this would be a fetch to the backend API
-    // For demo purposes, we're retrieving from localStorage
     if (id) {
       const storedData = localStorage.getItem(id);
       

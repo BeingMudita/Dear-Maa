@@ -13,7 +13,7 @@ const Home = () => {
               <Heart className="h-12 w-12 text-accent fill-accent" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold font-playfair text-primary">
-              Mother's Day Poem Generator
+              Celebrate Mother's Day with a Poem
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg mx-auto">
               Create a heartfelt, personalized poem for your mom this Mother's Day
