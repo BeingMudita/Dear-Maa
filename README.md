@@ -3,6 +3,8 @@
 
 **Dear Maa** is a simple, user-friendly web app that generates personalized poems for Mother's Day. No login or sign-up is required to use this app. Just provide your mother's name and a few amazing traits about her, and the app will generate a unique, heartfelt poem just for her. You can then share the poem via a unique URL or copy it to share with others. 💖
 
+👉 Try it live here: https://eternora.vercel.app/ 🌐
+
 ## ✨ Features ✨
 - **No login required**: Just enter your mother's name and her traits. 📝
 - **Personalized poems**: Generate a poem that reflects the special qualities of your mother. ✍️💐
