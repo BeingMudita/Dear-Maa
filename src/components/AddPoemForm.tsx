@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Flower, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 
 // This is just for frontend demo purposes
 // Will be replaced with actual backend integration
@@ -96,33 +98,45 @@ const AddPoemForm = () => {
     setIsGenerating(true);
 
     try {
-      // Here we would normally send a request to the backend
-      // For now, let's simulate a backend call with a timeout
-      setTimeout(() => {
-        // Generate poem locally for demo purposes
-        const poem = generatePoemFromInputs(name, filledTraits);
+      // Generate poem locally
+      const poem = generatePoemFromInputs(name, filledTraits);
+      
+      // Create poem data object
+      const poemData = {
+        name,
+        traits: filledTraits,
+        poem,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Save to Firebase
+      let poemId: string;
+      
+      // Create a unique ID
+      const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+      
+      // Try to save to Firebase first
+      try {
+        // Using the uniqueId as the document ID
+        await setDoc(doc(db, "poems", uniqueId), poemData);
+        poemId = uniqueId;
+      } catch (firebaseError) {
+        console.error("Firebase error:", firebaseError);
         
-        // Create a unique ID - in a real app, this would come from the backend
-        const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-        
-        // Store poem data in localStorage for demo purposes
-        // In a real app, this would be stored in a database
-        localStorage.setItem(uniqueId, JSON.stringify({
-          name,
-          traits: filledTraits,
-          poem,
-          createdAt: new Date().toISOString()
-        }));
-        
-        // Navigate to the poem display page
-        navigate(`/poem/${uniqueId}`);
-      }, 1500);
+        // Fallback to localStorage if Firebase fails
+        localStorage.setItem(uniqueId, JSON.stringify(poemData));
+        poemId = uniqueId;
+      }
+      
+      // Navigate to the poem display page
+      navigate(`/poem/${poemId}`);
     } catch (error) {
       toast({
         title: "Something went wrong",
         description: "Unable to generate poem. Please try again.",
         variant: "destructive",
       });
+      console.error("Error generating poem:", error);
     } finally {
       setIsGenerating(false);
     }

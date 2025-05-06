@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 interface PoemData {
   name: string;
@@ -21,20 +23,41 @@ const PoemDisplay = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (id) {
-      const storedData = localStorage.getItem(id);
-      
-      if (storedData) {
-        try {
-          const parsedData: PoemData = JSON.parse(storedData);
-          setPoemData(parsedData);
-        } catch (error) {
-          console.error("Error parsing poem data:", error);
-        }
+    const fetchPoemData = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
       }
-      
-      setLoading(false);
-    }
+
+      try {
+        // First try to get from Firebase
+        const docRef = doc(db, "poems", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data() as PoemData;
+          setPoemData(data);
+        } else {
+          // Fallback to localStorage for backwards compatibility
+          const storedData = localStorage.getItem(id);
+          
+          if (storedData) {
+            try {
+              const parsedData: PoemData = JSON.parse(storedData);
+              setPoemData(parsedData);
+            } catch (error) {
+              console.error("Error parsing poem data:", error);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching poem:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPoemData();
   }, [id]);
 
   const copyPoemToClipboard = () => {

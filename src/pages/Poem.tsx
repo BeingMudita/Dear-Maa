@@ -4,8 +4,20 @@ import PoemDisplay from "@/components/PoemDisplay";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const Poem = () => {
+  const { id } = useParams<{ id: string }>();
+
+  // Set document title for better sharing
+  useEffect(() => {
+    document.title = "Mother's Day Poem | Made with Love";
+    
+    // You could also dynamically update meta tags here if you want
+    // by getting the poem data and updating them
+  }, []);
+  
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="border-b border-border/40 py-4">
