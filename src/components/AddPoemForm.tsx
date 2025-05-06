@@ -146,7 +146,7 @@ const AddPoemForm = () => {
     <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
       <div className="space-y-2">
         <Label htmlFor="name" className="text-lg">
-          Mother's Name
+          Mom, but in your words?
         </Label>
         <Input
           id="name"
